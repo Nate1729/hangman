@@ -1,75 +1,46 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <time.h>
 
 #include "guesses_vec.h"
+#include "word_loader.h"
 
 
 const char* FILE_PATH = "words.txt";
 
+void print_prompt(const char* answer, GuessesVec* guesses) {
+  unsigned i;
+  printf("Solution: ");
+  for (i=0; answer[i] !='\0'; i++) {
+    if (guesses_vec_is_previous_guess(guesses, answer[i])) {
+      printf("%c", answer[i]);
+    } else {
+      printf("_");
+    }
+  }
+  printf("\nPrevious Guesses: ");
+  guesses_vec_print(guesses);
+  printf("\nEnter a guess: ");
+}
+
 int main(void) {
   GuessesVec guesses = guesses_vec_init();
-
-  char buffer[2048];
-  FILE *f = fopen(FILE_PATH, "r");
-  if (!f) {
-    fprintf(stderr, "I couldn't open the file.\n");
+  char* answer = get_random_word_from_file(FILE_PATH);
+  if (!answer) {
+    fprintf(stderr, "Issues loading word.\n");
     return 1;
   }
 
-  char c;
-  unsigned word_count=0;
-  do {
-    c = fgetc(f);
-    if (c == '\n')
-      word_count++;
-
-  } while (c !=EOF);
-  if (word_count == 0) {
-    fprintf(stderr, "there are no words to load\n");
-    fclose(f);
-    return 1;
+  unsigned quit = 0;
+  char c, buf;
+  while(!quit) {
+    print_prompt(answer, &guesses);
+    c = getchar();
+    guesses_vec_add_guess(&guesses, c);
+    while (getchar() != '\n');
   }
 
-  srand(time(NULL));
-  unsigned index_word = (unsigned)rand() % word_count;
-  printf("Pick the word on line: %u\n", index_word);
-
-  if (fseek(f, 0, SEEK_SET)) {
-    fprintf(stderr, "Couldn't seek to beginning of file\n");
-    fclose(f);
-    return 1;
-  }
-
-  char word[20];
-  unsigned line_count=1;
-  do {
-    c= fgetc(f);
-
-    if (c == '\n')
-      line_count++;
-
-    if (line_count == index_word)
-      break;
-
-  } while (c !=EOF);
-  if (c == EOF) {
-    fprintf(stderr, "The world is on fire\n");
-    fclose(f);
-  }
-
-  /* Should be a large enough buffer.
-   * This fails when a word is too long
-   */
-  fgets(word, 20, f);
-  unsigned length = strlen(word);
-  word[length] = 0;
-  word[length-1] = '\0';
-
-  fclose(f);
-
-
-  printf("The random word is: %s\n", word);
-
+  free(answer);
   return 0;
 }
