@@ -16,5 +16,8 @@ int guesses_vec_add_guess(GuessesVec* vec, char guess);
 void guesses_vec_print(GuessesVec* vec);
 int guesses_vec_is_previous_guess(GuessesVec* vec, char guess);
 
+/* Check if the `GuessesVec` object is a win
+ */
+int has_won(GuessesVec* vec, const char* answer);
 
 #endif
