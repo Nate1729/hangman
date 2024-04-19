@@ -1,18 +1,19 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #include "guesses_vec.h"
 #include "word_loader.h"
 
+const char *FILE_PATH = "words.txt";
 
-const char* FILE_PATH = "words.txt";
-
-void print_prompt(const char* answer, GuessesVec* guesses) {
+void print_prompt(const char *answer, GuessesVec *guesses) {
+  /* Clear screen and jump up to beginning of screen. */
+  printf("\x1b[2J\x1b[H");
   unsigned i;
   printf("Solution: ");
-  for (i=0; answer[i] !='\0'; i++) {
+  for (i = 0; answer[i] != '\0'; i++) {
     if (guesses_vec_is_previous_guess(guesses, answer[i])) {
       printf("%c", answer[i]);
     } else {
@@ -26,16 +27,17 @@ void print_prompt(const char* answer, GuessesVec* guesses) {
 
 int main(void) {
   GuessesVec guesses = guesses_vec_init();
-  char* answer = get_random_word_from_file(FILE_PATH);
+  char *answer = get_random_word_from_file(FILE_PATH);
   if (!answer) {
     fprintf(stderr, "Issues loading word.\n");
     return 1;
   }
 
-  unsigned quit = 0;
   char c, buf;
-  while(!quit) {
+  while (1) {
     print_prompt(answer, &guesses);
+    if (has_won(&guesses, answer))
+      break;
     c = getchar();
     guesses_vec_add_guess(&guesses, c);
     while (getchar() != '\n');
