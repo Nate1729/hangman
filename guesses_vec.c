@@ -46,9 +46,9 @@ int guesses_vec_is_previous_guess(GuessesVec *vec,
 }
 
 int has_won(GuessesVec *vec, const char *answer) {
-  char *c;
-  for (c = answer; *c != '\0'; c++) {
-    if (!guesses_vec_is_previous_guess(vec, *c))
+  unsigned i;
+  for (i = 0; answer[i] != '\0'; i++) {
+    if (!guesses_vec_is_previous_guess(vec, answer[i]))
       return 0;
   }
 

@@ -33,7 +33,7 @@ int main(void) {
     return 1;
   }
 
-  char c, buf;
+  char c;
   while (1) {
     print_prompt(answer, &guesses);
     if (has_won(&guesses, answer))
