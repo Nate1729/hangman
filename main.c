@@ -7,6 +7,7 @@
 #include "word_loader.h"
 
 const char *FILE_PATH = "words.txt";
+const unsigned int MAX_INCORRECT_GUESSES = 6;
 
 void print_prompt(const char *answer, GuessesVec *guesses) {
   /* Clear screen and jump up to beginning of screen. */
@@ -22,7 +23,8 @@ void print_prompt(const char *answer, GuessesVec *guesses) {
   }
   printf("\nPrevious Guesses: ");
   guesses_vec_print(guesses);
-  printf("\nEnter a guess: ");
+  printf("\nIncorrect guesses left: %u\n", MAX_INCORRECT_GUESSES - guesses_vec_count_incorrect_guesses(guesses, answer));
+  printf("Enter a guess: ");
 }
 
 int main(void) {
@@ -36,11 +38,17 @@ int main(void) {
   char c;
   while (1) {
     print_prompt(answer, &guesses);
-    if (has_won(&guesses, answer))
+    if (has_won(&guesses, answer)) {
+      printf("\nYou Win!\n");
       break;
+    }
     c = getchar();
     guesses_vec_add_guess(&guesses, c);
-    while (getchar() != '\n');
+    if (guesses_vec_count_incorrect_guesses(&guesses, answer) > MAX_INCORRECT_GUESSES) {
+      printf("\nYou Lose, the answer was %s\n", answer);
+      break;
+    }
+    while (getchar() != '\n'); /*flush stdin*/
   }
 
   free(answer);
