@@ -54,3 +54,31 @@ int has_won(GuessesVec *vec, const char *answer) {
 
   return 1;
 }
+
+int _in_string(const char *string, char c) {
+  unsigned int i;
+  for (i = 0; string[i] != '\0'; i++) {
+    if (string[i] == c) {
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+int _not_in_string(const char *string, char c) {
+  return !_in_string(string, c);
+}
+
+unsigned int guesses_vec_count_incorrect_guesses(GuessesVec *vec,
+                                                 const char *answer) {
+  unsigned int count = 0;
+  unsigned int i;
+
+  for (i = 0; i < vec->length; i++) {
+    if (_not_in_string(answer, vec->guesses[i]))
+      count++;
+  }
+
+  return count;
+}

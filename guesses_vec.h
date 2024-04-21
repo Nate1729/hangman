@@ -7,17 +7,18 @@ typedef struct {
   unsigned length;
 } GuessesVec;
 
-
 /* Initialize the guesses vec struct
  */
 GuessesVec guesses_vec_init();
 
-int guesses_vec_add_guess(GuessesVec* vec, char guess);
-void guesses_vec_print(GuessesVec* vec);
-int guesses_vec_is_previous_guess(GuessesVec* vec, char guess);
+int guesses_vec_add_guess(GuessesVec *vec, char guess);
+void guesses_vec_print(GuessesVec *vec);
+int guesses_vec_is_previous_guess(GuessesVec *vec, char guess);
 
 /* Check if the `GuessesVec` object is a win
  */
-int has_won(GuessesVec* vec, const char* answer);
+int has_won(GuessesVec *vec, const char *answer);
 
+unsigned int guesses_vec_count_incorrect_guesses(GuessesVec *vec,
+                                                 const char *answer);
 #endif
