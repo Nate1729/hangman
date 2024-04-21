@@ -32,10 +32,8 @@ void guesses_vec_print(GuessesVec *vec) {
   }
 }
 
-typedef char ascii_lowercase_letter;
-
 int guesses_vec_is_previous_guess(GuessesVec *vec,
-                                  ascii_lowercase_letter guess) {
+                                  char guess) {
   unsigned i;
   for (i = 0; i < vec->length; i++) {
     if (vec->guesses[i] == guess) {
