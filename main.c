@@ -36,7 +36,7 @@ void print_prompt(const char *answer, GuessHistory *guess_history, ReadGuessResu
   if (guess_result == READ_GUESS_RESULT_INVALID_CHARACTER) 
     printf("Your previous guess contained characters that weren't letters!\n");
   if (guess_result == READ_GUESS_RESULT_TOO_LONG)
-    printf("Your previous guess was too long, the answer has less characters\n");
+    printf("Your previous guess was too long, the answer has fewer characters\n");
   printf("Enter a guess: ");
 }
 
@@ -86,16 +86,16 @@ int main(void) {
     return 1;
   }
 
-  GuessHistory guess_history = guess_history_create();
+  GameState game_state = game_state_create(answer);
   
   char guess[16];
   unsigned int incorrect_guess_count = 0;
   ReadGuessResult read_result = READ_GUESS_RESULT_NO_GUESS;
   while (1) {
-    print_prompt(answer, &guess_history, read_result, incorrect_guess_count);
+    print_prompt(answer, &game_state.guess_history, read_result, incorrect_guess_count);
     read_result = read_guess(guess, strlen(answer));
     if (read_result == READ_GUESS_RESULT_SUCCESS) {
-      guess_history_add_guess(&guess_history, guess);
+      guess_history_add_guess(&game_state.guess_history, guess);
       if (is_incorrect_guess(answer, guess))
         incorrect_guess_count++; 
     }
@@ -103,7 +103,7 @@ int main(void) {
       printf("You loose, the answer was %s\n", answer);
       break;
     }
-    if (guess_history_check_win(&guess_history, answer)) {
+    if (guess_history_check_win(&game_state.guess_history, answer)) {
       printf("You win\n");
       break;
     }

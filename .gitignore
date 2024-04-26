@@ -1,4 +1,5 @@
 *.json
 *.o
 
+.cache/
 hangman

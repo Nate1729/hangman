@@ -23,11 +23,11 @@ int guess_history_check_win(GuessHistory *guess_history, char* answer);
 
 
 typedef struct {
-  char *answer;
+  const char *answer;
   GuessHistory guess_history;
 } GameState;
 
-GameState game_state_init(const char* answer);
+GameState game_state_create(const char* answer);
 
 
 #endif

@@ -89,3 +89,7 @@ int guess_history_check_win(GuessHistory *guess_history, char* answer) {
   }
   return 1;
 }
+
+GameState game_state_create(const char *answer) {
+  return (GameState) {.answer=answer, .guess_history=guess_history_create()};
+}
